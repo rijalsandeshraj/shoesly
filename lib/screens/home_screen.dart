@@ -10,7 +10,7 @@ import 'package:shoesly/models/product_model.dart';
 import 'package:shoesly/utils/show_custom_snack_bar.dart';
 import 'package:shoesly/widgets/custom_app_bar.dart';
 import 'package:shoesly/widgets/loading_widget.dart';
-import 'package:shoesly/widgets/rich_text_widget.dart';
+import 'package:shoesly/widgets/rating_rich_text_widget.dart';
 
 import '../cubits/product/product_cubit.dart';
 
