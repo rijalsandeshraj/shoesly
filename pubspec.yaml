@@ -1,0 +1,54 @@
+name: shoesly
+description: "A new Flutter project."
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.6
+  firebase_core: ^2.31.0
+  cloud_firestore: ^4.17.3
+  lottie: ^3.1.2
+  flutter_bloc: ^8.1.5
+  equatable: ^2.0.5
+  connectivity_plus: ^6.0.3
+  cached_network_image: ^3.3.1
+  firebase_storage: ^11.7.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+#   flutter_native_splash: ^2.4.0
+
+# flutter_native_splash:
+#   color: "#faf0f2"
+#   image: assets/images/logo.png
+
+#   android_12:
+#     color: "#faf0f2"
+#     image: assets/images/logo.png
+
+#   ios: false
+#   web: false
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/animations/
+
+  fonts:
+    - family: Urbanist
+      fonts:
+        - asset: assets/fonts/Urbanist-Italic-VariableFont_wght.ttf
+        - asset: assets/fonts/Urbanist-VariableFont_wght.ttf
