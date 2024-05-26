@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shoesly/screens/home_screen.dart';
+import 'package:shoesly/screens/discover_screen.dart';
 import 'package:shoesly/utils/navigator.dart';
 
 import '../constants/colors.dart';
@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      navigateAndRemoveUntil(context: context, screen: const HomeScreen());
+      navigateAndRemoveUntil(context: context, screen: const DiscoverScreen());
     });
   }
 
@@ -32,17 +32,14 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/images/cart_unloaded.png',
-              height: 100,
-            ),
+            Image.asset('assets/images/logo.png', height: 50),
             const SizedBox(height: 10),
             Text(
-              'Halesi Entrance\nManagement',
+              'Shoesly',
               textAlign: TextAlign.center,
               style: headerTextStyle.copyWith(
                 fontSize: 25,
-                color: AppColor.primary,
+                color: AppColor.primaryTextColor,
               ),
             ),
             Lottie.asset(

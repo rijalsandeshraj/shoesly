@@ -11,7 +11,6 @@ class LoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        alignment: Alignment.center,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: AppColor.primary, borderRadius: BorderRadius.circular(20)),

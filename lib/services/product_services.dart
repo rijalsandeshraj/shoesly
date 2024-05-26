@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shoesly/models/product_model.dart';
+import 'package:shoesly/constants/common.dart';
+import 'package:shoesly/models/product.dart';
+import 'package:shoesly/models/review.dart';
+import 'package:shoesly/models/select.dart';
 
 class ProductServices {
   // Creating a private constructor
@@ -11,25 +14,44 @@ class ProductServices {
     return _instance;
   }
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final _productsRef = FirebaseFirestore.instance.collection('products');
 
-  final productsRef =
-      FirebaseFirestore.instance.collection('firestore-example-app');
-  // .withConverter<ProductModel>(
-  //   fromFirestore: (snapshots, _) => ProductModel.fromJson(snapshots.data()!),
-  //   toFirestore: (movie, _) => movie.toJson(),
-  // );
+  // Adds brands to common list based on products fetched from Firestore database
+  addToBrandList(List<Product> products) {
+    List<SelectOption> brands = [SelectOption(id: 0, title: 'All')];
+    int id = 1;
+    for (var product in products) {
+      bool notInList = brands.any((e) => e.title != product.brand);
+      if (notInList) {
+        brands.add(SelectOption(
+          id: id,
+          title: product.brand ?? 'N/A',
+          value: product.brandLogoUrl,
+        ));
+        id++;
+      }
+    }
+    Common.brands.value = brands;
+  }
 
-  Future<List<ProductModel>> fetchProducts() async =>
-      _firestore.collection('products').get().then((result) {
-        // List<ProductModel> products = [];
-        // for (var product in result.docs) {
-        //   products.add(ProductModel.fromSnapshot(result.docs));
-        // }
-        List<ProductModel> products =
-            result.docs.map((e) => ProductModel.fromSnapshot(e)).toList();
-        return products;
-      });
+  Future<List<Product>> fetchProducts() async {
+    final result = await _productsRef.get();
+    List<Product> products =
+        result.docs.map((e) => Product.fromSnapshot(e)).toList();
+    addToBrandList(products);
+    return products;
+  }
+
+  Future<List<Review>> getReviews(String productId) async {
+    final result =
+        await _productsRef.doc(productId).collection('reviews').get();
+    final reviews = result.docs
+        .map(
+          (doc) => Review.fromJson({...doc.data()}),
+        )
+        .toList();
+    return reviews;
+  }
 
   // Future<List<ProductModel>> searchProducts({String productName}) {
   //   // code to convert the first character to uppercase
@@ -48,4 +70,14 @@ class ProductServices {
   //         return products;
   //       });
   // }
+
+  // Called once
+  // Initially called for seeding data to Firestore database
+  Future<void> addProductsToFirestore(List<Product> products) async {
+    for (var product in products) {
+      // Add the product data to the collection
+      await _productsRef.add(product.toJson());
+      // print('Product added successfully!');
+    }
+  }
 }

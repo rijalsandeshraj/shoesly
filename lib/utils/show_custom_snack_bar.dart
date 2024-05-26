@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shoesly/constants/colors.dart';
 
 showCustomSnackBar(BuildContext context, String msg,
     {bool taskSuccess = true}) {
@@ -6,13 +7,12 @@ showCustomSnackBar(BuildContext context, String msg,
     SnackBar(
       content: Text(
         msg,
+        maxLines: 3,
         textAlign: TextAlign.center,
-        maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
-      backgroundColor: taskSuccess == true
-          ? Colors.green.withOpacity(0.9)
-          : Colors.red.withOpacity(0.9),
+      backgroundColor:
+          taskSuccess ? AppColor.primary : Colors.red.withOpacity(0.9),
       width: MediaQuery.of(context).size.width / 1.4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       behavior: SnackBarBehavior.floating,

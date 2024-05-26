@@ -3,58 +3,57 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 
 // TextStyle for home screen app bar
-TextStyle headerTextStyle = const TextStyle(
+const TextStyle headerTextStyle = TextStyle(
   fontWeight: FontWeight.w700,
   color: AppColor.primaryTextColor,
   fontSize: 30,
 );
 
 // Primary TextStyle
-TextStyle primaryTextStyle = const TextStyle(
+const TextStyle primaryTextStyle = TextStyle(
   fontWeight: FontWeight.w600,
   color: AppColor.primaryTextColor,
   fontSize: 16,
 );
 
 // TextStyle for product description
-TextStyle descriptionTextStyle = const TextStyle(
+const TextStyle descriptionTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: AppColor.descriptionTextColor,
   fontSize: 16,
 );
 
 // TextStyle for product reviews
-TextStyle reviewTextStyle = const TextStyle(
+const TextStyle reviewTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: AppColor.primaryTextColor,
   fontSize: 12,
 );
 
 // TextStyle for product reviewers
-TextStyle reviewerTextStyle = const TextStyle(
+const TextStyle reviewerTextStyle = TextStyle(
   fontWeight: FontWeight.w700,
-  color: AppColor.reviewerTextColor,
+  color: AppColor.primaryTextColor,
   fontSize: 14,
 );
 
-// TextStyle for home category
-TextStyle homeCategoryTextStyle = const TextStyle(
+// TextStyle for categories in Discover Screen and
+// product title in Product Detail Screen
+const TextStyle homeCategoryTextStyle = TextStyle(
   fontWeight: FontWeight.w700,
   color: AppColor.primaryTextColor,
   fontSize: 20,
-  // height: 30,
 );
 
 // TextStyle for filter category
-TextStyle filterCategoryTextStyle = const TextStyle(
+const TextStyle filterCategoryTextStyle = TextStyle(
   fontWeight: FontWeight.w700,
   color: AppColor.primaryTextColor,
   fontSize: 14,
-  // height: 24,
 );
 
 // TextStyle for ticket price
-TextStyle priceTextStyle = const TextStyle(
+const TextStyle priceTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
   color: AppColor.primary,
   fontSize: 21,

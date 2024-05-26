@@ -21,6 +21,9 @@ dependencies:
   connectivity_plus: ^6.0.3
   cached_network_image: ^3.3.1
   firebase_storage: ^11.7.6
+  flutter_rating_bar: ^4.0.1
+  simple_animations: ^5.0.2
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -29,15 +32,16 @@ dev_dependencies:
   flutter_lints: ^4.0.0
 #   flutter_native_splash: ^2.4.0
 
+# # Command for creating native splash
+# # > dart run flutter_native_splash:create
 # flutter_native_splash:
-#   color: "#faf0f2"
+#   color: "#f3f3f3"
 #   image: assets/images/logo.png
 
 #   android_12:
-#     color: "#faf0f2"
+#     color: "#f3f3f3"
 #     image: assets/images/logo.png
 
-#   ios: false
 #   web: false
 
 flutter:
@@ -46,6 +50,7 @@ flutter:
   assets:
     - assets/images/
     - assets/animations/
+    - assets/icons/
 
   fonts:
     - family: Urbanist
