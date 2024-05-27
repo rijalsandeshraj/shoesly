@@ -14,8 +14,8 @@ class LocationService {
   Future<String> getAddress(double latitude, double longitude) async {
     List<Placemark> placemarks =
         await placemarkFromCoordinates(latitude, longitude);
-    String? address = placemarks.first.name;
-    return address ?? 'Default Location';
+    Placemark selectedPlacemark = placemarks.last;
+    return '${selectedPlacemark.street}, ${selectedPlacemark.locality}, ${selectedPlacemark.country}, ${selectedPlacemark.postalCode}';
   }
 
   Future<LocationPermission> requestService() async {
@@ -23,7 +23,8 @@ class LocationService {
     LocationPermission permission;
     // Permission handler for accessing device location
     const locationService = Permission.location;
-    if (await locationService.isDenied) {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
       PermissionStatus status = await locationService.request();
       if (status != PermissionStatus.granted) {
         return LocationPermission.denied;

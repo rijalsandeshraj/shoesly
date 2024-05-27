@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shoesly/constants/app_variables.dart';
+import 'package:shoesly/common/app_variables.dart';
 import 'package:shoesly/constants/text_styles.dart';
 import 'package:shoesly/cubits/product/product_cubit.dart';
 import 'package:shoesly/models/product.dart';

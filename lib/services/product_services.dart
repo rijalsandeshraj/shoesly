@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
-import 'package:shoesly/constants/app_variables.dart';
+import 'package:shoesly/common/app_variables.dart';
 import 'package:shoesly/models/product.dart';
 import 'package:shoesly/models/review.dart';
 import 'package:shoesly/models/select.dart';

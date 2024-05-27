@@ -15,7 +15,7 @@ import 'package:shoesly/widgets/custom_app_bar.dart';
 import 'package:shoesly/widgets/loading_widget.dart';
 import 'package:shoesly/widgets/rating_rich_text_widget.dart';
 
-import '../../constants/app_variables.dart';
+import '../../common/app_variables.dart';
 import '../../cubits/product/product_cubit.dart';
 import 'widgets/horizontal_select_widget.dart';
 

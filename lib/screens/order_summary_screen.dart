@@ -35,6 +35,7 @@ class OrderSummaryScreen extends StatefulWidget {
 class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
   bool loading = false;
   bool gettingLocation = false;
+  bool productsAddedForOrder = false;
   int productTypesQty = 0;
   LocationPermission locationPermission = LocationPermission.denied;
   var order = Order(
@@ -42,7 +43,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
     paymentMethod: paymentMethods.first,
     address: 'Default Location',
     geoPoint: const GeoPoint(0, 0),
-    orderedDateTime: DateTime.timestamp(),
+    orderedDateTime: DateTime.timestamp().toLocal(),
     shippingCharge: 20,
     grandTotal: 0,
   );
@@ -78,7 +79,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
     return await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Are you sure about placing this order'),
+        title: const Text('Are you sure about placing this order?'),
         content: const Text('Pressing \'YES\' will place your order!'),
         actions: [
           TextButton(
@@ -120,8 +121,9 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                   const CheckMarkWidget(),
                   const SizedBox(height: 20),
                   const Text(
-                    'Order Placed!',
+                    'Order Placed Successfully!',
                     style: homeCategoryTextStyle,
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 5),
                   Text(
@@ -163,6 +165,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
               setState(() {
                 loading = true;
               });
+              order.orderedDateTime = DateTime.timestamp().toLocal();
               try {
                 await ProductServices().addOrderToFirestore(order);
                 setState(() {
@@ -250,11 +253,13 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                             if (locationPermission ==
                                 LocationPermission.denied) {
                               showCustomSnackBar(
-                                  context, 'Location permission is denied');
+                                  context, 'Location permission is denied',
+                                  taskSuccess: false);
                             } else if (locationPermission ==
                                 LocationPermission.deniedForever) {
                               showCustomSnackBar(context,
-                                  'Location permission is permanently denied. Enable location permission in Settings.');
+                                  'Location permission is permanently denied. Enable location permission in Settings.',
+                                  taskSuccess: false);
                             } else {
                               var position =
                                   await LocationService().getCurrentPosition();
@@ -263,6 +268,8 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                               order.address = await LocationService()
                                   .getAddress(
                                       position.latitude, position.longitude);
+                              showCustomSnackBar(
+                                  context, 'Location fetched successfully');
                             }
                             setState(() {
                               gettingLocation = false;
@@ -281,7 +288,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                                   const Text('Location',
                                       style: reviewerTextStyle),
                                   const SizedBox(height: 10),
-                                  Text('Default Location',
+                                  Text(order.address,
                                       style: descriptionTextStyle.copyWith(
                                           fontSize: 14)),
                                 ],
@@ -307,8 +314,13 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                           final cartProduct = state.cartProducts[index];
                           String totalPricePerProduct =
                               totalPricePerQuantity(cartProduct);
-                          order.products.add(cartProduct.toJsonForOrder(
-                              double.tryParse(totalPricePerProduct) ?? 0));
+                          if (!productsAddedForOrder) {
+                            order.products.add(cartProduct.toJsonForOrder(
+                                double.tryParse(totalPricePerProduct) ?? 0));
+                          }
+                          if (index == state.cartProducts.length - 1) {
+                            productsAddedForOrder = true;
+                          }
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

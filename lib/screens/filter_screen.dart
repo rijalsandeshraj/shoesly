@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shoesly/constants/colors.dart';
-import 'package:shoesly/constants/app_variables.dart';
+import 'package:shoesly/common/app_variables.dart';
 import 'package:shoesly/constants/text_styles.dart';
 import 'package:shoesly/widgets/button_widget.dart';
 import 'package:shoesly/widgets/cached_network_image_widget.dart';

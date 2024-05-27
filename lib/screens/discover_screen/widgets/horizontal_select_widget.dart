@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shoesly/constants/app_variables.dart';
+import 'package:shoesly/common/app_variables.dart';
 import 'package:shoesly/models/select.dart';
 
 import '../../../constants/colors.dart';
