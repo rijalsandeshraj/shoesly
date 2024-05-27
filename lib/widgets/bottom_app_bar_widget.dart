@@ -55,7 +55,6 @@ class BottomAppBarWidget extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               AnimatedSwitcherWrapper(
-                  key: UniqueKey(),
                   child: Text(leadingElementValue, style: primaryTextStyle)),
             ],
           ),

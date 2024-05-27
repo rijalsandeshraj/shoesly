@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shoesly/constants/colors.dart';
-import 'package:shoesly/constants/common.dart';
+import 'package:shoesly/constants/app_variables.dart';
 import 'package:shoesly/constants/text_styles.dart';
 import 'package:shoesly/widgets/button_widget.dart';
 import 'package:shoesly/widgets/cached_network_image_widget.dart';
@@ -153,10 +152,10 @@ class _BrandFilterState extends State<BrandFilter> {
           height: 120,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: Common.brands.value.length,
+            itemCount: AppVariables.brands.value.length,
             itemBuilder: (context, index) {
-              final isSelected =
-                  widget.selectedBrand == Common.brands.value[index].title;
+              final isSelected = widget.selectedBrand ==
+                  AppVariables.brands.value[index].title;
               return GestureDetector(
                 onTap: () {
                   setState(() {
@@ -165,7 +164,7 @@ class _BrandFilterState extends State<BrandFilter> {
                       widget.onSelectBrand('');
                     } else {
                       widget.onSelectBrand(
-                          Common.brands.value[_selectedBrand].title);
+                          AppVariables.brands.value[_selectedBrand].title);
                       _selectedBrand = index;
                     }
                   });
@@ -195,7 +194,8 @@ class _BrandFilterState extends State<BrandFilter> {
                               ),
                               child: CachedNetworkImageWidget(
                                 imageUrl:
-                                    Common.brands.value[index].value ?? '',
+                                    AppVariables.brands.value[index].value ??
+                                        '',
                                 placeholderSize: 40,
                                 errorImagePath: 'assets/images/no_image.png',
                               ),
@@ -222,7 +222,7 @@ class _BrandFilterState extends State<BrandFilter> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Text(Common.brands.value[index].title,
+                      Text(AppVariables.brands.value[index].title,
                           style: reviewerTextStyle),
                       Text(
                         '1 Item(s)',

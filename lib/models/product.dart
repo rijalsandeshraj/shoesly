@@ -62,6 +62,7 @@ class Product {
     );
   }
 
+  // Method called for seeding products data to database
   Map<String, dynamic> toJson() => {
         'name': name,
         'description': description,
@@ -75,5 +76,16 @@ class Product {
         'reviewsCount': reviewsCount,
         'addedDate': addedDate,
         'gender': gender,
+      };
+
+  // Method called for creating products data for placing orders
+  Map<String, dynamic> toJsonForOrder(double totalPrice) => {
+        'name': name,
+        'brand': brand,
+        'selectedColor': selectedColor?.title ?? 'Color N/A',
+        'selectedSize': selectedSize,
+        'price': price,
+        'quantity': quantity,
+        'totalPrice': totalPrice,
       };
 }

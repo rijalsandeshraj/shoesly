@@ -60,8 +60,7 @@ class CustomHomeAppBar extends StatelessWidget {
                   padding: const EdgeInsets.all(5),
                   child: BlocBuilder<ProductCubit, ProductState>(
                     builder: (context, state) {
-                      return state.cartProducts == null ||
-                              state.cartProducts!.isEmpty
+                      return state.cartProducts.isEmpty
                           ? Image.asset('assets/images/cart_unloaded.png')
                           : Image.asset('assets/images/cart_loaded.png');
                     },
@@ -70,6 +69,39 @@ class CustomHomeAppBar extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ReloadAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const ReloadAppBar({
+    super.key,
+    required this.title,
+    this.actions,
+    required this.reloadOnPop,
+  });
+
+  final String title;
+  final List<Widget>? actions;
+  final Function reloadOnPop;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(56);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      centerTitle: true,
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+          onPressed: () {
+            reloadOnPop();
+          },
+          icon: const Icon(Icons.arrow_back_rounded)),
+      title: Text(title, style: primaryTextStyle),
+      backgroundColor: Colors.transparent,
+      actions: actions,
+      elevation: 0,
     );
   }
 }

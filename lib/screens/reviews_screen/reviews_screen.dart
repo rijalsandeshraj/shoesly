@@ -49,7 +49,10 @@ class _ReviewsScreenState extends State<ReviewsScreen>
             child: Row(
               children: [
                 const Icon(Icons.star_rounded, color: AppColor.starColor),
-                Text(widget.averageRating.toString())
+                Text(
+                  widget.averageRating.toString(),
+                  style: reviewerTextStyle,
+                )
               ],
             ),
           ),

@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shoesly/constants/colors.dart';
@@ -21,9 +20,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
     return BlocProvider(
-      create: (context) => ProductCubit(firebaseStorage),
+      create: (context) => ProductCubit(),
       child: MaterialApp(
         title: 'Shoesly',
         theme: ThemeData(

@@ -1,8 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shoesly/constants/common.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
+import 'package:shoesly/constants/app_variables.dart';
 import 'package:shoesly/models/product.dart';
 import 'package:shoesly/models/review.dart';
 import 'package:shoesly/models/select.dart';
+
+import '../models/order.dart';
 
 class ProductServices {
   // Creating a private constructor
@@ -10,11 +12,13 @@ class ProductServices {
   // Creating a single instance of the class
   static final ProductServices _instance =
       ProductServices._privateConstructor();
+
   factory ProductServices() {
     return _instance;
   }
 
   final _productsRef = FirebaseFirestore.instance.collection('products');
+  final _ordersRef = FirebaseFirestore.instance.collection('orders');
 
   // Adds brands to common list based on products fetched from Firestore database
   addToBrandList(List<Product> products) {
@@ -31,7 +35,7 @@ class ProductServices {
         id++;
       }
     }
-    Common.brands.value = brands;
+    AppVariables.brands.value = brands;
   }
 
   Future<List<Product>> fetchProducts() async {
@@ -45,12 +49,14 @@ class ProductServices {
   Future<List<Review>> getReviews(String productId) async {
     final result =
         await _productsRef.doc(productId).collection('reviews').get();
-    final reviews = result.docs
-        .map(
-          (doc) => Review.fromJson({...doc.data()}),
-        )
-        .toList();
+    final reviews =
+        result.docs.map((doc) => Review.fromJson({...doc.data()})).toList();
     return reviews;
+  }
+
+  // Called for storing order to Firestore database
+  Future<void> addOrderToFirestore(Order order) async {
+    await _ordersRef.add(order.toJson());
   }
 
   // Future<List<ProductModel>> searchProducts({String productName}) {

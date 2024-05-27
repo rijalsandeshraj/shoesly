@@ -1,0 +1,53 @@
+import 'package:flutter/material.dart';
+import 'package:shoesly/constants/app_variables.dart';
+import 'package:shoesly/models/select.dart';
+
+import '../../../constants/colors.dart';
+import '../../../constants/text_styles.dart';
+
+class HorizontalSelectWidget extends StatefulWidget {
+  const HorizontalSelectWidget({
+    super.key,
+    required this.options,
+    required this.getSelectedBrand,
+  });
+
+  final List<SelectOption> options;
+  final void Function(String) getSelectedBrand;
+
+  @override
+  State<HorizontalSelectWidget> createState() => _HorizontalSelectWidgetState();
+}
+
+class _HorizontalSelectWidgetState extends State<HorizontalSelectWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 50,
+      child: ListView.builder(
+        itemCount: widget.options.length,
+        shrinkWrap: true,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          String brand = widget.options[index].title;
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                AppVariables.selectedBrandIndex = index;
+              });
+              widget.getSelectedBrand(brand);
+            },
+            child: Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: Text(brand,
+                    style: AppVariables.selectedBrandIndex == index
+                        ? homeCategoryTextStyle
+                        : homeCategoryTextStyle.copyWith(
+                            color: AppColor.secondaryTextColor))),
+          );
+        },
+      ),
+    );
+  }
+}

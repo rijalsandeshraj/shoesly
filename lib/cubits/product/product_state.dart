@@ -6,21 +6,21 @@ enum ProductStatus {
   error,
 }
 
-class ProductState extends Equatable {
-  ProductState({
+class ProductState {
+  const ProductState({
     this.status = ProductStatus.loading,
-    this.products,
-    this.filteredProducts,
-    this.cartProducts,
+    this.products = const [],
+    this.filteredProducts = const [],
+    this.cartProducts = const [],
     this.message,
   });
 
-  ProductStatus status;
-  List<Product>? products;
-  List<Product>? filteredProducts;
-  List<Product>? cartProducts;
+  final ProductStatus status;
+  final List<Product> products;
+  final List<Product> filteredProducts;
+  final List<Product> cartProducts;
   // The info or error message to be displayed as a snackbar
-  String? message;
+  final String? message;
 
   ProductState copyWith({
     ProductStatus? status,
@@ -38,12 +38,12 @@ class ProductState extends Equatable {
     );
   }
 
-  @override
-  List<Object?> get props => [
-        status,
-        products,
-        filteredProducts,
-        cartProducts,
-        message,
-      ];
+  // @override
+  // List<Object?> get props => [
+  //       status,
+  //       products,
+  //       filteredProducts,
+  //       cartProducts,
+  //       message,
+  //     ];
 }

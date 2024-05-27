@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shoesly/constants/colors.dart';
-import 'package:shoesly/constants/layout_constants.dart';
+import 'package:shoesly/constants/constants.dart';
 import 'package:shoesly/constants/text_styles.dart';
 import 'package:shoesly/cubits/product/product_cubit.dart';
 import 'package:shoesly/models/select.dart';
@@ -45,6 +45,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   List<Review> reviews = [];
   List<Review> topRatedReviews = [];
   bool reviewsLoading = true;
+  late bool isFavorite = widget.product.isFavorite;
 
   // Bottom sheet shown while 'Add to Cart' button is clicked
   Future<dynamic> _showAddToCartBottomSheet(BuildContext context) {
@@ -150,7 +151,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             });
                             Navigator.pop(context);
                             _showAddedToCartBottomSheet(
-                                context, quantityController.text);
+                                context,
+                                quantityController.text,
+                                widget.product.id ?? '');
                           }
                         },
                         forModalBottomSheet: true,
@@ -168,7 +171,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   // Bottom sheet shown while the product is added to cart
   Future<dynamic> _showAddedToCartBottomSheet(
-      BuildContext context, String quantity) {
+      BuildContext context, String quantity, String productId) {
     return showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -214,7 +217,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       title: 'TO CART',
                       onPressed: () {
                         Navigator.pop(context);
-                        navigateTo(context, const CartScreen());
+                        navigateTo(context,
+                                CartScreen(navigatedProductId: productId))
+                            .then((value) {
+                          if (value == true) {
+                            setState(() {
+                              widget.product.addedToCart = false;
+                            });
+                          }
+                        });
                       },
                     ),
                   ),
@@ -264,7 +275,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         actions: [
           GestureDetector(
             onTap: () {
-              navigateTo(context, const CartScreen());
+              navigateTo(context,
+                      CartScreen(navigatedProductId: widget.product.id))
+                  .then((value) {
+                if (value == true) {
+                  setState(() {
+                    widget.product.addedToCart = false;
+                  });
+                }
+              });
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 30),
@@ -288,7 +307,52 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
               child: Column(
                 children: <Widget>[
-                  const Expanded(flex: 1, child: SizedBox()),
+                  Expanded(
+                      flex: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            height: 40,
+                            width: 40,
+                            margin: const EdgeInsets.only(right: 10),
+                            alignment: Alignment.center,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColor.white,
+                            ),
+                            child: IconButton(
+                                padding: EdgeInsets.zero,
+                                iconSize: 27,
+                                onPressed: () {
+                                  if (isFavorite) {
+                                    context
+                                        .read<ProductCubit>()
+                                        .removeFromFavorites(
+                                            widget.product.id ?? '');
+                                    showCustomSnackBar(
+                                      context,
+                                      'Product removed from Favorites',
+                                      taskSuccess: false,
+                                    );
+                                  } else {
+                                    context.read<ProductCubit>().addToFavorites(
+                                        widget.product.id ?? '');
+                                    showCustomSnackBar(
+                                        context, 'Product added to Favorites');
+                                  }
+                                  setState(() {
+                                    isFavorite = !isFavorite;
+                                  });
+                                },
+                                icon: isFavorite
+                                    ? const Icon(Icons.favorite_rounded,
+                                        color: AppColor.red)
+                                    : const Icon(
+                                        Icons.favorite_outline_rounded)),
+                          )
+                        ],
+                      )),
                   Expanded(
                     flex: 3,
                     child: PageView.builder(

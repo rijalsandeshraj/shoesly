@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shoesly/constants/colors.dart';
-import 'package:shoesly/constants/layout_constants.dart';
+import 'package:shoesly/constants/constants.dart';
 import 'package:shoesly/constants/text_styles.dart';
 import 'package:shoesly/cubits/product/product_cubit.dart';
 import 'package:shoesly/models/product.dart';
@@ -86,6 +86,14 @@ class CartProductWidget extends StatelessWidget {
                       const SizedBox(width: 10),
                       Text(
                         (cartProduct.selectedSize ?? 0).toString(),
+                        style: reviewTextStyle.copyWith(
+                            color: AppColor.descriptionTextColor),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        '\$${(cartProduct.price ?? 0).toString()}',
                         style: reviewTextStyle.copyWith(
                             color: AppColor.descriptionTextColor),
                         maxLines: 1,

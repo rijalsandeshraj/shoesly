@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shoesly/screens/discover_screen.dart';
+import 'package:shoesly/screens/discover_screen/discover_screen.dart';
 import 'package:shoesly/utils/navigator.dart';
 
 import '../constants/colors.dart';

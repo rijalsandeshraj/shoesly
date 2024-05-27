@@ -19,11 +19,12 @@ class CachedNetworkImageWidget extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: imageUrl,
       fit: BoxFit.contain,
-      placeholder: (context, url) => FittedBox(
-        child: SizedBox(
-          height: placeholderSize,
-          width: placeholderSize,
-          child: Lottie.asset('assets/animations/image_loading.json'),
+      placeholder: (context, url) => SizedBox(
+        height: placeholderSize,
+        width: placeholderSize,
+        child: FittedBox(
+          child:
+              Lottie.asset(height: 30, 'assets/animations/image_loading.json'),
         ),
       ),
       errorWidget: (context, url, error) => Image.asset(errorImagePath),

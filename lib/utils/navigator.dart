@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 // Navigates to the specified screen
-navigateTo(BuildContext context, Widget screen) {
-  Navigator.push(
+Future<dynamic> navigateTo(BuildContext context, Widget screen) {
+  return Navigator.push(
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => screen,

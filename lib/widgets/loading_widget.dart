@@ -5,7 +5,9 @@ import 'package:shoesly/constants/text_styles.dart';
 import '../constants/colors.dart';
 
 class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({super.key});
+  const LoadingWidget({super.key, this.title = 'Loading...'});
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +15,12 @@ class LoadingWidget extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-            color: AppColor.primary, borderRadius: BorderRadius.circular(20)),
+            color: AppColor.primary.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(20)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text('Loading...',
+            Text(title,
                 style: primaryTextStyle.copyWith(color: AppColor.green)),
             Lottie.asset('assets/animations/loader.json', height: 70),
           ],

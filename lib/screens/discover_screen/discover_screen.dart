@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shoesly/constants/colors.dart';
-import 'package:shoesly/constants/layout_constants.dart';
+import 'package:shoesly/constants/constants.dart';
 import 'package:shoesly/constants/text_styles.dart';
 import 'package:shoesly/models/product.dart';
-import 'package:shoesly/models/select.dart';
 import 'package:shoesly/screens/filter_screen.dart';
 import 'package:shoesly/screens/product_detail_screen/product_detail_screen.dart';
 import 'package:shoesly/utils/navigator.dart';
@@ -16,8 +15,9 @@ import 'package:shoesly/widgets/custom_app_bar.dart';
 import 'package:shoesly/widgets/loading_widget.dart';
 import 'package:shoesly/widgets/rating_rich_text_widget.dart';
 
-import '../constants/common.dart';
-import '../cubits/product/product_cubit.dart';
+import '../../constants/app_variables.dart';
+import '../../cubits/product/product_cubit.dart';
+import 'widgets/horizontal_select_widget.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
@@ -53,7 +53,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   @override
   void initState() {
     super.initState();
-    if (context.read<ProductCubit>().state.products != null) return;
+    if (context.read<ProductCubit>().state.products.isNotEmpty) return;
     initConnectivity().then((value) {
       if (value) {
         context.read<ProductCubit>().fetchProducts();
@@ -97,7 +97,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           children: [
             const CustomHomeAppBar(),
             ValueListenableBuilder(
-                valueListenable: Common.brands,
+                valueListenable: AppVariables.brands,
                 builder: (context, value, child) {
                   return HorizontalSelectWidget(
                     options: value,
@@ -115,21 +115,37 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     return const LoadingWidget();
                   } else if (state.status == ProductStatus.success) {
                     productsLoaded = true;
-                    List<Product> products =
-                        state.filteredProducts ?? state.products!;
+                    List<Product> products = state.filteredProducts.isNotEmpty
+                        ? state.filteredProducts
+                        : state.products;
                     return RefreshIndicator(
                       onRefresh: () async {
                         context.read<ProductCubit>().fetchProducts();
+                        AppVariables.selectedBrandIndex = 0;
                       },
                       edgeOffset: 50,
                       child: products.isEmpty
-                          ? const Center(
+                          ? Center(
                               child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
+                                const Text(
                                   'No Products Available',
                                   style: primaryTextStyle,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    context
+                                        .read<ProductCubit>()
+                                        .fetchProducts();
+                                  },
+                                  child: Lottie.asset(
+                                      width: deviceWidth / 4,
+                                      'assets/animations/reload.json'),
+                                ),
+                                const Text(
+                                  'Tap to reload',
+                                  style: descriptionTextStyle,
                                 ),
                               ],
                             ))
@@ -184,7 +200,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                                                 .brandLogoUrl ??
                                                             '',
                                                         placeholderSize:
-                                                            deviceWidth / 8,
+                                                            deviceWidth / 9.5,
                                                         errorImagePath:
                                                             'assets/images/no_logo.png',
                                                       ),
@@ -309,54 +325,5 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             ),
           ],
         ));
-  }
-}
-
-class HorizontalSelectWidget extends StatefulWidget {
-  const HorizontalSelectWidget({
-    super.key,
-    required this.options,
-    required this.getSelectedBrand,
-  });
-
-  final List<SelectOption> options;
-  final void Function(String) getSelectedBrand;
-
-  @override
-  State<HorizontalSelectWidget> createState() => _HorizontalSelectWidgetState();
-}
-
-class _HorizontalSelectWidgetState extends State<HorizontalSelectWidget> {
-  int selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      child: ListView.builder(
-        itemCount: widget.options.length,
-        shrinkWrap: true,
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          String brand = widget.options[index].title;
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-              });
-              widget.getSelectedBrand(brand);
-            },
-            child: Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: Text(brand,
-                    style: selectedIndex == index
-                        ? homeCategoryTextStyle
-                        : homeCategoryTextStyle.copyWith(
-                            color: AppColor.secondaryTextColor))),
-          );
-        },
-      ),
-    );
   }
 }
