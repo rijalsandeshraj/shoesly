@@ -11,13 +11,33 @@ class LocationService {
 
   LocationService._();
 
+  // Gets user current address based on retrieved coordinates
   Future<String> getAddress(double latitude, double longitude) async {
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(latitude, longitude);
-    Placemark selectedPlacemark = placemarks.last;
-    return '${selectedPlacemark.street}, ${selectedPlacemark.locality}, ${selectedPlacemark.country}, ${selectedPlacemark.postalCode}';
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+      Placemark selectedPlacemark = placemarks.last;
+      String street = selectedPlacemark.street != null &&
+              selectedPlacemark.street!.isNotEmpty
+          ? '${selectedPlacemark.street}, '
+          : '';
+      String locality = selectedPlacemark.locality != null &&
+              selectedPlacemark.locality!.isNotEmpty
+          ? '${selectedPlacemark.locality}, '
+          : '';
+      String postalCode = selectedPlacemark.postalCode != null &&
+              selectedPlacemark.postalCode!.isNotEmpty
+          ? ', ${selectedPlacemark.postalCode}'
+          : '';
+      String streetAndLocality =
+          street == locality ? locality : '$street$locality';
+      return '$streetAndLocality${selectedPlacemark.country}$postalCode';
+    } catch (e) {
+      return 'Default Location';
+    }
   }
 
+  // Requests location service for getting location permission
   Future<LocationPermission> requestService() async {
     // Geolocator Location permission
     LocationPermission permission;
@@ -45,6 +65,7 @@ class LocationService {
     return LocationPermission.always;
   }
 
+  // Gets current position after location permission is allowed
   Future<Position> getCurrentPosition() async {
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.bestForNavigation,

@@ -17,7 +17,7 @@ showCustomSnackBar(BuildContext context, String msg,
       ),
       backgroundColor: taskSuccess
           ? AppColor.primary.withOpacity(0.9)
-          : Colors.red.withOpacity(0.9),
+          : AppColor.red.withOpacity(0.9),
       width: MediaQuery.of(context).size.width / 1.4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       behavior: SnackBarBehavior.floating,

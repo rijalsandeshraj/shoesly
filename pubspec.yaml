@@ -12,7 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.6
   firebase_core: ^2.31.0
   cloud_firestore: ^4.17.3
   lottie: ^3.1.2
@@ -22,6 +21,7 @@ dependencies:
   firebase_storage: ^11.7.6
   flutter_rating_bar: ^4.0.1
   simple_animations: ^5.0.2
+  flutter_slidable: ^3.1.0
   flutter_map: ^6.1.0
   geocoding: ^3.0.0
   latlong2: ^0.9.1
@@ -33,19 +33,19 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^4.0.0
-#   flutter_native_splash: ^2.4.0
+  flutter_native_splash: ^2.4.0
 
-# # Command for creating native splash
-# # > dart run flutter_native_splash:create
-# flutter_native_splash:
-#   color: "#f3f3f3"
-#   image: assets/images/logo.png
+# Command for creating native splash
+# > dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#f3f3f3"
+  image: assets/images/logo.png
 
-#   android_12:
-#     color: "#f3f3f3"
-#     image: assets/images/logo.png
+  android_12:
+    color: "#f3f3f3"
+    image: assets/images/native_splash_icon_android12.png
 
-#   web: false
+  web: false
 
 flutter:
   uses-material-design: true

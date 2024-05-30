@@ -8,7 +8,7 @@ class AppColor {
   static const descriptionTextColor = Color.fromARGB(255, 111, 111, 111);
   static const white = Colors.white;
   static const green = Colors.green;
-  static const red = Colors.red;
+  static const red = Color.fromARGB(255, 255, 76, 94);
   static const starColor = Color.fromARGB(255, 252, 210, 64);
   static const transparent = Colors.transparent;
 }

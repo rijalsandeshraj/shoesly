@@ -113,20 +113,23 @@ class CartProductWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const Spacer(),
-                    CounterWidget(
-                      value: cartProduct.quantity.toString(),
-                      onDecrementPressed: () {
-                        if (cartProduct.quantity > 1) {
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: CounterWidget(
+                        value: cartProduct.quantity.toString(),
+                        onDecrementPressed: () {
+                          if (cartProduct.quantity > 1) {
+                            context
+                                .read<ProductCubit>()
+                                .decreaseQuantity(cartProduct.id ?? '');
+                          }
+                        },
+                        onIncrementPressed: () {
                           context
                               .read<ProductCubit>()
-                              .decreaseQuantity(cartProduct.id ?? '');
-                        }
-                      },
-                      onIncrementPressed: () {
-                        context
-                            .read<ProductCubit>()
-                            .increaseQuantity(cartProduct.id ?? '');
-                      },
+                              .increaseQuantity(cartProduct.id ?? '');
+                        },
+                      ),
                     ),
                   ]),
                 ),
