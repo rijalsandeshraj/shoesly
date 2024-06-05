@@ -1,16 +1,18 @@
-# shoesly
+# Shoesly
 
-A new Flutter project.
+**Demo E-commerce (Shoes) App built with Flutter and Firebase**
 
-## Getting Started
+## Project Details
 
-This project is a starting point for a Flutter application.
+📲 **Latest Commit Date:** 5th June, 2024<br/>
+🔢 **Latest Version:** 1.0.0+1<br/>
+🧑🏻‍💻 **Last Active Developer:** Sandesh Rijal<br/>
+❄️ **Publish Branch:** main<br/>
+⚡ **Development Branch:** main<br/>
 
-A few resources to get you started if this is your first Flutter project:
+## Notes
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Following Firebase configuration files have been added to .gitignore file for security reasons:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- firebase.json
+- lib/firebase_options.dart
