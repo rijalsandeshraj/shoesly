@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:lottie/lottie.dart';
@@ -39,7 +38,7 @@ class CartScreen extends StatelessWidget {
         final totalPrice = cartProducts.fold<double>(
           0,
           (previousValue, element) =>
-              previousValue + element.price! * element.quantity,
+              previousValue + element.price * element.quantity,
         );
         // Value for passing to previous screen for reload condition
         bool shouldReload = (AppVariables.dismissedProductId != null &&
@@ -153,7 +152,7 @@ class CartScreen extends StatelessWidget {
                                               context
                                                   .read<ProductCubit>()
                                                   .removeFromCart(
-                                                      cartProduct.id ?? '');
+                                                      cartProduct.id);
                                               showCustomSnackBar(
                                                 context,
                                                 'Product removed from cart',

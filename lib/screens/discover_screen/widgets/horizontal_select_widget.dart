@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shoesly/common/app_variables.dart';
-import 'package:shoesly/models/select.dart';
+import 'package:shoesly/models/select_option.dart';
+import 'package:shoesly/utils/utils.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/text_styles.dart';
@@ -34,17 +35,25 @@ class _HorizontalSelectWidgetState extends State<HorizontalSelectWidget> {
           return GestureDetector(
             onTap: () {
               setState(() {
+                resetProductsFilter();
+                AppVariables.filtersApplied.value = false;
                 AppVariables.selectedBrandIndex = index;
               });
               widget.getSelectedBrand(brand);
             },
             child: Padding(
                 padding: const EdgeInsets.only(right: 20),
-                child: Text(brand,
-                    style: AppVariables.selectedBrandIndex == index
-                        ? homeCategoryTextStyle
-                        : homeCategoryTextStyle.copyWith(
-                            color: AppColor.secondaryTextColor))),
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: AppVariables.filtersApplied,
+                  builder: (context, value, child) {
+                    return Text(brand,
+                        style:
+                            AppVariables.selectedBrandIndex == index && !value
+                                ? homeCategoryTextStyle
+                                : homeCategoryTextStyle.copyWith(
+                                    color: AppColor.secondaryTextColor));
+                  },
+                )),
           );
         },
       ),

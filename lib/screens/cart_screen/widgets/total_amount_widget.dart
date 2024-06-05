@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shoesly/constants/text_styles.dart';
 
-import '../../../animations/animated_switcher_wrapper.dart';
 import '../../../constants/colors.dart';
 import '../../../utils/show_custom_snack_bar.dart';
 
@@ -66,20 +65,18 @@ class TotalAmountWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Total', style: primaryTextStyle),
-                    AnimatedSwitcherWrapper(
-                      child: Text(
-                        totalPrice == 5.0
-                            ? '\$ 0.0'
-                            : '\$ ${totalPrice.toStringAsFixed(2)}',
-                        key: ValueKey(totalPrice),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: AppColor.white,
-                          fontSize: 20,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                    Text(
+                      totalPrice == 5.0
+                          ? '\$ 0.0'
+                          : '\$ ${totalPrice.toStringAsFixed(2)}',
+                      key: ValueKey(totalPrice),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.white,
+                        fontSize: 20,
                       ),
-                    )
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),

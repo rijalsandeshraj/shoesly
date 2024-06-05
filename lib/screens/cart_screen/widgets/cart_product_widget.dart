@@ -17,7 +17,7 @@ class CartProductWidget extends StatelessWidget {
   final Product cartProduct;
 
   String totalPricePerQuantity(Product product) {
-    num price = product.quantity * (product.price ?? 0);
+    num price = product.quantity * (product.price);
     return price.toStringAsFixed(2);
   }
 
@@ -40,7 +40,7 @@ class CartProductWidget extends StatelessWidget {
                 color: AppColor.primary,
               ),
               child: CachedNetworkImageWidget(
-                imageUrl: cartProduct.imageUrl ?? '',
+                imageUrl: cartProduct.imageUrl,
                 placeholderSize: 50,
                 errorImagePath: 'assets/images/no_image.png',
               ),
@@ -56,7 +56,7 @@ class CartProductWidget extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    cartProduct.name ?? 'N/A',
+                    cartProduct.name,
                     style: primaryTextStyle,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -69,7 +69,7 @@ class CartProductWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        cartProduct.brand ?? 'N/A',
+                        cartProduct.brand,
                         style: reviewTextStyle.copyWith(
                             color: AppColor.descriptionTextColor),
                         maxLines: 1,
@@ -93,7 +93,7 @@ class CartProductWidget extends StatelessWidget {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        '\$${(cartProduct.price ?? 0).toString()}',
+                        '\$${(cartProduct.price).toString()}',
                         style: reviewTextStyle.copyWith(
                             color: AppColor.descriptionTextColor),
                         maxLines: 1,
@@ -121,13 +121,13 @@ class CartProductWidget extends StatelessWidget {
                           if (cartProduct.quantity > 1) {
                             context
                                 .read<ProductCubit>()
-                                .decreaseQuantity(cartProduct.id ?? '');
+                                .decreaseQuantity(cartProduct.id);
                           }
                         },
                         onIncrementPressed: () {
                           context
                               .read<ProductCubit>()
-                              .increaseQuantity(cartProduct.id ?? '');
+                              .increaseQuantity(cartProduct.id);
                         },
                       ),
                     ),

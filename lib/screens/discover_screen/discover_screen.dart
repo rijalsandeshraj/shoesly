@@ -6,10 +6,12 @@ import 'package:shoesly/constants/colors.dart';
 import 'package:shoesly/constants/constants.dart';
 import 'package:shoesly/constants/text_styles.dart';
 import 'package:shoesly/models/product.dart';
-import 'package:shoesly/screens/filter_screen.dart';
+import 'package:shoesly/models/products_filter.dart';
+import 'package:shoesly/screens/filter_screen/filter_screen.dart';
 import 'package:shoesly/screens/product_detail_screen/product_detail_screen.dart';
 import 'package:shoesly/utils/navigator.dart';
 import 'package:shoesly/utils/show_custom_snack_bar.dart';
+import 'package:shoesly/utils/utils.dart';
 import 'package:shoesly/widgets/cached_network_image_widget.dart';
 import 'package:shoesly/widgets/custom_app_bar.dart';
 import 'package:shoesly/widgets/loading_widget.dart';
@@ -29,6 +31,7 @@ class DiscoverScreen extends StatefulWidget {
 class _DiscoverScreenState extends State<DiscoverScreen> {
   final Connectivity connectivity = Connectivity();
   bool productsLoaded = false;
+  ProductsFilter productsFilter = ProductsFilter();
 
   Future<bool> initConnectivity() async {
     List<ConnectivityResult> result = [];
@@ -68,25 +71,41 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: AppColor.white,
+        appBar: const CustomHomeAppBar(),
         floatingActionButton: Container(
           height: 40,
           margin: const EdgeInsets.only(bottom: 10),
           child: FloatingActionButton.extended(
             onPressed: () {
-              navigateTo(context, const FilterScreen());
+              if (productsLoaded) {
+                navigateTo(context, const FilterScreen()).then((value) {
+                  if (value == true) {
+                    context
+                        .read<ProductCubit>()
+                        .applyMultipleFilters(AppVariables.productsFilter);
+                  }
+                });
+              }
             },
             backgroundColor: AppColor.primaryTextColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),
             ),
-            icon: const Badge(
-                offset: Offset(1, 0),
-                largeSize: 8,
-                label: SizedBox(),
-                child: Icon(
-                  Icons.manage_search_rounded,
-                  color: AppColor.white,
-                )),
+            icon: ValueListenableBuilder<bool>(
+              valueListenable: AppVariables.filtersApplied,
+              builder: (context, value, child) {
+                return value
+                    ? Badge(
+                        offset: const Offset(0, 0),
+                        largeSize: 8,
+                        child:
+                            Image.asset('assets/images/filter.png', height: 20))
+                    : Image.asset(
+                        'assets/images/filter.png',
+                        height: 20,
+                      );
+              },
+            ),
             label: Text('FILTER',
                 style: reviewerTextStyle.copyWith(color: AppColor.white)),
           ),
@@ -95,7 +114,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const CustomHomeAppBar(),
             ValueListenableBuilder(
                 valueListenable: AppVariables.brands,
                 builder: (context, value, child) {
@@ -115,11 +133,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     return const LoadingWidget();
                   } else if (state.status == ProductStatus.success) {
                     productsLoaded = true;
-                    List<Product> products = state.filteredProducts.isNotEmpty
-                        ? state.filteredProducts
-                        : state.products;
+                    List<Product> products =
+                        AppVariables.productsFilter.filtersApplied ||
+                                state.filteredProducts.isNotEmpty
+                            ? state.filteredProducts
+                            : state.products;
                     return RefreshIndicator(
                       onRefresh: () async {
+                        resetProductsFilter();
+                        AppVariables.filtersApplied.value = false;
                         context.read<ProductCubit>().fetchProducts();
                         AppVariables.selectedBrandIndex = 0;
                       },
@@ -135,9 +157,10 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
+                                    resetProductsFilter();
                                     context
                                         .read<ProductCubit>()
-                                        .fetchProducts();
+                                        .filterProducts('All');
                                   },
                                   child: Lottie.asset(
                                       width: deviceWidth / 4,
@@ -197,8 +220,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                                       child:
                                                           CachedNetworkImageWidget(
                                                         imageUrl: product
-                                                                .brandLogoUrl ??
-                                                            '',
+                                                            .brandLogoUrl,
                                                         placeholderSize:
                                                             deviceWidth / 9.5,
                                                         errorImagePath:
@@ -217,8 +239,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                                     child:
                                                         CachedNetworkImageWidget(
                                                       imageUrl:
-                                                          product.imageUrl ??
-                                                              '',
+                                                          product.imageUrl,
                                                       placeholderSize:
                                                           deviceWidth / 3,
                                                       errorImagePath:
@@ -244,7 +265,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                product.name ?? 'Product',
+                                                product.name,
                                                 overflow: TextOverflow.ellipsis,
                                                 maxLines: 2,
                                                 style: reviewTextStyle,
@@ -262,8 +283,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                                   RatingRichTextWidget(
                                                       title:
                                                           '${product.averageRating}',
-                                                      reviewsCount: product
-                                                          .reviewsCount!),
+                                                      reviewsCount:
+                                                          product.reviewsCount),
                                                 ],
                                               ),
                                               const SizedBox(height: 3),
@@ -275,10 +296,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                                   const Text('\$',
                                                       style: reviewerTextStyle),
                                                   Text(
-                                                    product.price != null
-                                                        ? product.price!
-                                                            .toStringAsFixed(2)
-                                                        : '0.0',
+                                                    product.price
+                                                        .toStringAsFixed(2),
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     maxLines: 1,

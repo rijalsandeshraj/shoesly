@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shoesly/animations/animated_switcher_wrapper.dart';
 import 'package:shoesly/widgets/button_widget.dart';
 
 import '../constants/colors.dart';
@@ -34,7 +33,7 @@ class BottomAppBarWidget extends StatelessWidget {
                   color: Colors.grey.withOpacity(0.2),
                   spreadRadius: 10,
                   blurRadius: 10,
-                  offset: const Offset(0, 3), // changes position of shadow
+                  offset: const Offset(0, 3),
                 ),
               ],
       ),
@@ -54,8 +53,7 @@ class BottomAppBarWidget extends StatelessWidget {
                     color: AppColor.descriptionTextColor),
               ),
               const SizedBox(height: 5),
-              AnimatedSwitcherWrapper(
-                  child: Text(leadingElementValue, style: primaryTextStyle)),
+              Text(leadingElementValue, style: primaryTextStyle),
             ],
           ),
           ButtonWidget(title: actionTitle, onPressed: onPressed),

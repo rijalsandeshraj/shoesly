@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shoesly/constants/colors.dart';
 import 'package:shoesly/constants/text_styles.dart';
 import 'package:shoesly/models/review.dart';
-import 'package:shoesly/widgets/build_tab_bar.dart';
+import 'package:shoesly/widgets/custom_tab_bar.dart';
 import 'package:shoesly/widgets/custom_app_bar.dart';
 import 'package:shoesly/widgets/review_card.dart';
 

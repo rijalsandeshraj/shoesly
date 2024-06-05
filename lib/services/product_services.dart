@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart' hide Order;
 import 'package:shoesly/common/app_variables.dart';
 import 'package:shoesly/models/product.dart';
 import 'package:shoesly/models/review.dart';
-import 'package:shoesly/models/select.dart';
+import 'package:shoesly/models/select_option.dart';
 
 import '../models/order.dart';
 
@@ -20,19 +20,31 @@ class ProductServices {
   final _productsRef = FirebaseFirestore.instance.collection('products');
   final _ordersRef = FirebaseFirestore.instance.collection('orders');
 
-  // Adds brands to common list based on products fetched from Firestore database
+  // Adds brands to common brands list based on products fetched from Firestore database
   addToBrandList(List<Product> products) {
-    List<SelectOption> brands = [SelectOption(id: 0, title: 'All')];
+    List<SelectOption> brands = [
+      SelectOption(
+          id: 0, title: 'All', imageUrl: '', value: 1, isSelected: true)
+    ];
     int id = 1;
     for (var product in products) {
-      bool notInList = brands.any((e) => e.title != product.brand);
-      if (notInList) {
+      SelectOption option = brands.firstWhere(
+        (e) => e.title == product.brand,
+        orElse: () {
+          return SelectOption(id: -1, title: '');
+        },
+      );
+      if (option.id == -1) {
         brands.add(SelectOption(
           id: id,
-          title: product.brand ?? 'N/A',
-          value: product.brandLogoUrl,
+          title: product.brand,
+          imageUrl: product.brandLogoUrl,
+          value: 1,
         ));
         id++;
+      } else {
+        // For increasing the quantity of products based on brand
+        brands.firstWhere((e) => e.title == product.brand).value++;
       }
     }
     AppVariables.brands.value = brands;

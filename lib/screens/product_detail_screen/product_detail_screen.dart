@@ -6,7 +6,7 @@ import 'package:shoesly/constants/colors.dart';
 import 'package:shoesly/constants/constants.dart';
 import 'package:shoesly/constants/text_styles.dart';
 import 'package:shoesly/cubits/product/product_cubit.dart';
-import 'package:shoesly/models/select.dart';
+import 'package:shoesly/models/select_option.dart';
 import 'package:shoesly/screens/cart_screen/cart_screen.dart';
 import 'package:shoesly/screens/product_detail_screen/widgets/text_field_widget.dart';
 import 'package:shoesly/screens/reviews_screen/reviews_screen.dart';
@@ -54,7 +54,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     // Calculates total price based on quantity of individual product
     num getTotalPrice() {
       int quantity = int.tryParse(quantityController.text) ?? 0;
-      num totalPrice = (widget.product.price ?? 0) * quantity;
+      num totalPrice = (widget.product.price) * quantity;
       return totalPrice;
     }
 
@@ -150,10 +150,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               widget.product.addedToCart = true;
                             });
                             Navigator.pop(context);
-                            _showAddedToCartBottomSheet(
-                                context,
-                                quantityController.text,
-                                widget.product.id ?? '');
+                            _showAddedToCartBottomSheet(context,
+                                quantityController.text, widget.product.id);
                           }
                         },
                         forModalBottomSheet: true,
@@ -240,7 +238,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   getReviews() async {
     try {
-      reviews = await ProductServices().getReviews(widget.product.id ?? '');
+      reviews = await ProductServices().getReviews(widget.product.id);
       reviews.sort((a, b) => b.rating.compareTo(a.rating));
     } catch (e) {
       // ignore: use_build_context_synchronously
@@ -256,13 +254,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void initState() {
     super.initState();
     getReviews();
-    colors = widget.product.hexColors ?? [];
+    colors = widget.product.hexColors;
     selectedColor = SelectOption(
         id: 0,
         title: colors.first.split('-')[0],
-        value: colors.first.split('-')[1]);
+        imageUrl: colors.first.split('-')[1]);
     widget.product.selectedColor = selectedColor;
-    widget.product.selectedSize = widget.product.sizes?.first;
+    widget.product.selectedSize = widget.product.sizes.first;
   }
 
   @override
@@ -328,16 +326,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   if (isFavorite) {
                                     context
                                         .read<ProductCubit>()
-                                        .removeFromFavorites(
-                                            widget.product.id ?? '');
+                                        .removeFromFavorites(widget.product.id);
                                     showCustomSnackBar(
                                       context,
                                       'Product removed from Favorites',
                                       taskSuccess: false,
                                     );
                                   } else {
-                                    context.read<ProductCubit>().addToFavorites(
-                                        widget.product.id ?? '');
+                                    context
+                                        .read<ProductCubit>()
+                                        .addToFavorites(widget.product.id);
                                     showCustomSnackBar(
                                         context, 'Product added to Favorites');
                                   }
@@ -365,7 +363,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       itemCount: 3,
                       itemBuilder: (context, index) {
                         return CachedNetworkImageWidget(
-                          imageUrl: widget.product.imageUrl ?? '',
+                          imageUrl: widget.product.imageUrl,
                           placeholderSize: deviceSize.width / 2.5,
                           errorImagePath: 'assets/images/no_image.png',
                         );
@@ -405,7 +403,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         selectedColor = SelectOption(
                                             id: index,
                                             title: splittedColors[0],
-                                            value: splittedColors[1]);
+                                            imageUrl: splittedColors[1]);
                                         widget.product.selectedColor =
                                             selectedColor;
                                       });
@@ -453,12 +451,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ),
             const SizedBox(height: 30),
-            Text(widget.product.name ?? 'N/A', style: homeCategoryTextStyle),
+            Text(widget.product.name, style: homeCategoryTextStyle),
             const SizedBox(height: 5),
             Row(
               children: [
                 RatingBar(
-                  initialRating: widget.product.averageRating?.toDouble() ?? 1,
+                  initialRating: widget.product.averageRating.toDouble(),
                   direction: Axis.horizontal,
                   itemCount: 5,
                   itemSize: 15,
@@ -482,21 +480,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 const SizedBox(width: 5),
                 RatingRichTextWidget(
                     title: widget.product.averageRating.toString(),
-                    reviewsCount: widget.product.reviewsCount ?? 0),
+                    reviewsCount: widget.product.reviewsCount),
               ],
             ),
             const SizedBox(height: 30),
             const Text('Size', style: primaryTextStyle),
             const SizedBox(height: 10),
             Row(
-              children:
-                  List.generate(widget.product.sizes?.length ?? 0, (index) {
+              children: List.generate(widget.product.sizes.length, (index) {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
                       selectedSizeIndex = index;
-                      widget.product.selectedSize =
-                          widget.product.sizes![index];
+                      widget.product.selectedSize = widget.product.sizes[index];
                     });
                   },
                   child: Padding(
@@ -519,7 +515,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ),
                       ),
                       child: Text(
-                        widget.product.sizes?[index].toString() ?? 'N/A',
+                        widget.product.sizes[index].toString(),
                         style: reviewerTextStyle.copyWith(
                           color: selectedSizeIndex == index
                               ? AppColor.white
@@ -537,8 +533,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               style: primaryTextStyle,
             ),
             const SizedBox(height: 10),
-            Text(widget.product.description ?? 'N/A',
-                style: descriptionTextStyle),
+            Text(widget.product.description, style: descriptionTextStyle),
             const SizedBox(height: 30),
             Text('Reviews (${reviews.length})', style: primaryTextStyle),
             const SizedBox(height: 10),
@@ -580,8 +575,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               context,
                               ReviewsScreen(
                                   reviews: reviews,
-                                  averageRating:
-                                      widget.product.averageRating ?? 0));
+                                  averageRating: widget.product.averageRating));
                         },
                         title: 'SEE ALL REVIEWS'),
                   )
@@ -591,7 +585,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
       bottomNavigationBar: BottomAppBarWidget(
         leadingElementTitle: 'Price',
-        leadingElementValue: '\$${widget.product.price?.toStringAsFixed(2)}',
+        leadingElementValue: '\$${widget.product.price.toStringAsFixed(2)}',
         actionTitle: 'ADD TO CART',
         onPressed: () {
           _showAddToCartBottomSheet(context);

@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shoesly/constants/constants.dart';
 import 'package:shoesly/models/product.dart';
+import 'package:shoesly/models/products_filter.dart';
 import 'package:shoesly/services/product_services.dart';
+import 'package:shoesly/utils/utils.dart';
 
 part 'product_state.dart';
 
@@ -33,16 +36,72 @@ class ProductCubit extends Cubit<ProductState> {
     }
   }
 
-  // Filter products based on selected brand
+  // Filter products based on selected brand in Discover Screen
   Future<void> filterProducts(String brand) async {
     if (brand == 'All') {
       emit(state.copyWith(filteredProducts: []));
     } else {
       var filteredProducts = state.products
-          .where((e) => e.brand?.toLowerCase() == brand.toLowerCase())
+          .where((e) => e.brand.toLowerCase() == brand.toLowerCase())
           .toList();
       emit(state.copyWith(filteredProducts: filteredProducts));
     }
+  }
+
+  // Filter products based on multiple filters selected from Filter Screen
+  void applyMultipleFilters(ProductsFilter productsFilter) {
+    emit(state.copyWith(status: ProductStatus.loading));
+    // List for storing products based on selected brands
+    List<Product> filteredProducts0 = [];
+    if (productsFilter.selectedBrands.contains('All')) {
+      filteredProducts0 = state.products;
+    } else {
+      for (String brand in productsFilter.selectedBrands) {
+        filteredProducts0.addAll(state.products.where((e) => e.brand == brand));
+      }
+    }
+
+    // List for storing products based on selected price range
+    List<Product> filteredProducts1 = [];
+    double selectedStartingPrice = productsFilter.selectedPriceRange.start;
+    double selectedEndingPrice = productsFilter.selectedPriceRange.end;
+    if (selectedStartingPrice != initialPriceRange.start ||
+        selectedEndingPrice != initialPriceRange.end) {
+      filteredProducts1.addAll(filteredProducts0.where((e) =>
+          e.price >= selectedStartingPrice && e.price <= selectedEndingPrice));
+    } else {
+      filteredProducts1 = filteredProducts0;
+    }
+
+    // List for storing filtered products by sorting
+    // based on price or added date
+    List<Product> filteredProducts2 = getPrimarySortedProducts(
+        filteredProducts1, productsFilter.selectedPrimarySortOption);
+
+    // List for storing filtered products by sorting based on gender
+    List<Product> filteredProducts3 = getGenderSortedProducts(
+        filteredProducts2, productsFilter.selectedGenderSortOption);
+
+    // List for storing filtered products based on colors
+    List<Product> filteredProducts4 = [];
+    if (productsFilter.selectedColors.isEmpty) {
+      filteredProducts4 = filteredProducts3;
+    } else {
+      int i = 0;
+      for (String color in productsFilter.selectedColors) {
+        for (i; i < filteredProducts3.length; i++) {
+          bool isAvailable =
+              filteredProducts3[i].hexColors.any((e) => e.contains(color));
+          if (isAvailable) {
+            filteredProducts4.add(filteredProducts3[i]);
+          }
+        }
+      }
+    }
+
+    // Emits filtered products based on selected parameters
+    emit(state.copyWith(
+        status: ProductStatus.success, filteredProducts: filteredProducts4));
   }
 
   // Add product to Favorites

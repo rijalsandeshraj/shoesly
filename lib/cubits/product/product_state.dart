@@ -6,7 +6,9 @@ enum ProductStatus {
   error,
 }
 
-class ProductState {
+class ProductState
+//  extends Equatable
+{
   const ProductState({
     this.status = ProductStatus.loading,
     this.products = const [],

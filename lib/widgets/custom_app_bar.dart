@@ -38,37 +38,40 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 // AppBar shown in DiscoverScreen
-class CustomHomeAppBar extends StatelessWidget {
+class CustomHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomHomeAppBar({super.key});
 
   @override
+  Size get preferredSize => const Size.fromHeight(56);
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 30, right: 25),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            const Text('Discover', style: headerTextStyle),
-            InkWell(
-                onTap: () {
-                  navigateTo(context, const CartScreen());
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: BlocBuilder<ProductCubit, ProductState>(
-                    builder: (context, state) {
-                      return state.cartProducts.isEmpty
-                          ? Image.asset('assets/images/cart_unloaded.png')
-                          : Image.asset('assets/images/cart_loaded.png');
-                    },
-                  ),
-                )),
-          ],
-        ),
+    return AppBar(
+      centerTitle: false,
+      automaticallyImplyLeading: true,
+      title: const Padding(
+        padding: EdgeInsets.only(left: 15),
+        child: Text('Discover', style: headerTextStyle),
       ),
+      backgroundColor: Colors.transparent,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 30),
+          child: InkWell(
+            onTap: () {
+              navigateTo(context, const CartScreen());
+            },
+            child: BlocBuilder<ProductCubit, ProductState>(
+              builder: (context, state) {
+                return state.cartProducts.isEmpty
+                    ? Image.asset('assets/images/cart_unloaded.png')
+                    : Image.asset('assets/images/cart_loaded.png');
+              },
+            ),
+          ),
+        ),
+      ],
+      elevation: 0,
     );
   }
 }

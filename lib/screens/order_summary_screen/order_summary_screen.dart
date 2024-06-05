@@ -53,7 +53,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
   );
 
   String totalPricePerQuantity(Product product) {
-    num price = product.quantity * (product.price ?? 0);
+    num price = product.quantity * (product.price);
     return price.toStringAsFixed(2);
   }
 
@@ -396,7 +396,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(cartProduct.name ?? '',
+                                  Text(cartProduct.name,
                                       style: primaryTextStyle),
                                   const SizedBox(height: 5),
                                   Row(
