@@ -36,7 +36,6 @@ class _HorizontalSelectWidgetState extends State<HorizontalSelectWidget> {
             onTap: () {
               setState(() {
                 resetProductsFilter();
-                AppVariables.filtersApplied.value = false;
                 AppVariables.selectedBrandIndex = index;
               });
               widget.getSelectedBrand(brand);

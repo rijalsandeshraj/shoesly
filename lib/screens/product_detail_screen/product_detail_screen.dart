@@ -307,49 +307,53 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 children: <Widget>[
                   Expanded(
                       flex: 1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 40,
-                            margin: const EdgeInsets.only(right: 10),
-                            alignment: Alignment.center,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColor.white,
-                            ),
-                            child: IconButton(
-                                padding: EdgeInsets.zero,
-                                iconSize: 27,
-                                onPressed: () {
-                                  if (isFavorite) {
-                                    context
-                                        .read<ProductCubit>()
-                                        .removeFromFavorites(widget.product.id);
-                                    showCustomSnackBar(
-                                      context,
-                                      'Product removed from Favorites',
-                                      taskSuccess: false,
-                                    );
-                                  } else {
-                                    context
-                                        .read<ProductCubit>()
-                                        .addToFavorites(widget.product.id);
-                                    showCustomSnackBar(
-                                        context, 'Product added to Favorites');
-                                  }
-                                  setState(() {
-                                    isFavorite = !isFavorite;
-                                  });
-                                },
-                                icon: isFavorite
-                                    ? const Icon(Icons.favorite_rounded,
-                                        color: AppColor.red)
-                                    : const Icon(
-                                        Icons.favorite_outline_rounded)),
-                          )
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 40,
+                              width: 40,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColor.white,
+                              ),
+                              child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  iconSize: 27,
+                                  onPressed: () {
+                                    if (isFavorite) {
+                                      context
+                                          .read<ProductCubit>()
+                                          .removeFromFavorites(
+                                              widget.product.id);
+                                      showCustomSnackBar(
+                                        context,
+                                        'Product removed from Favorites',
+                                        taskSuccess: false,
+                                      );
+                                    } else {
+                                      context
+                                          .read<ProductCubit>()
+                                          .addToFavorites(widget.product.id);
+                                      showCustomSnackBar(context,
+                                          'Product added to Favorites');
+                                    }
+                                    setState(() {
+                                      isFavorite = !isFavorite;
+                                    });
+                                  },
+                                  icon: isFavorite
+                                      ? const Icon(Icons.favorite_rounded,
+                                          color: AppColor.red)
+                                      : const Icon(
+                                          Icons.favorite_outline_rounded)),
+                            )
+                          ],
+                        ),
                       )),
                   Expanded(
                     flex: 3,
@@ -483,6 +487,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     reviewsCount: widget.product.reviewsCount),
               ],
             ),
+            const SizedBox(height: 5),
+            Text('Added on ${widget.product.addedDate}',
+                style: descriptionTextStyle.copyWith(fontSize: 12)),
             const SizedBox(height: 30),
             const Text('Size', style: primaryTextStyle),
             const SizedBox(height: 10),
