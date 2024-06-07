@@ -4,7 +4,7 @@
 
 ## Project Details
 
-📲 **Latest Commit Date:** 5th June, 2024<br/>
+📲 **Latest Commit Date:** 7th June, 2024<br/>
 🔢 **Latest Version:** 1.0.0+1<br/>
 🧑🏻‍💻 **Last Active Developer:** Sandesh Rijal<br/>
 ❄️ **Publish Branch:** main<br/>
